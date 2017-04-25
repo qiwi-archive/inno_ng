@@ -2,6 +2,8 @@
   "name": "innong",
   "version": "0.0.1",
   "description": "Angular ecom rnd lib",
+  "main": "build/index.js",
+  "typings": "build/index",
   "scripts": {
     "watch": "tsc --watch",
     "build": "tsc"
