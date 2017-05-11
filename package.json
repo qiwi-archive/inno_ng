@@ -1,6 +1,6 @@
 {
   "name": "innong",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Angular ecom rnd lib",
   "main": "build/index.js",
   "typings": "build/index",
