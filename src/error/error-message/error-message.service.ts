@@ -7,7 +7,6 @@ export class ErrorMessageService {
         ERROR_CONNECT: 'Ошибка при попытке соединения с сервером.',
         ERROR_UNKNOWN: 'Неизвестная ошибка',
         ERROR_NOT_FOUND: 'Не найдено',
-        ERROR_CONFLICT_PARTNER_NAME: 'Партнер с таким именем уже существует',
         ERROR_REQUEST_NOT_FOUND: 'Заявка не найдена',
         ERROR_REQUEST_INVALID_STATUS: 'Статус текущей заявки не позволяет осуществить операцию',
         ERROR_INVALID_REQUEST_FLOW: 'Текущее состояние заявки не позволяет совершить данное действие',
