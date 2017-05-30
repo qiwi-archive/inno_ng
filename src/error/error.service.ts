@@ -9,12 +9,15 @@ export class ErrorServiceHandler extends ErrorHandler {
     }
 
     handleError(error: any): void {
-        if (error.rejection instanceof HttpError) {
-            this.informer.httpErrors.next(error.rejection);
-        } else if (error.rejection instanceof Response) {
-            this.informer.httpErrors.next(new HttpError('ERROR_CONNECT', 500));
-        } else {
-            super.handleError(error);
+        if (error.rejection) {
+            if (error.rejection.type === HttpError.type) {
+                this.informer.httpErrors.next(error.rejection);
+                return;
+            } else if (error.rejection instanceof Response) {
+                this.informer.httpErrors.next(new HttpError('ERROR_CONNECT', 500));
+                return;
+            }
         }
+        super.handleError(error);
     }
 }
