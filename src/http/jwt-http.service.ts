@@ -19,7 +19,7 @@ export class JwtHttpService extends HttpService {
         return super.requestRaw(url, options);
     }
 
-    protected processOptions(options: RequestOptionsArgs): void {
+    processOptions(options: RequestOptionsArgs): void {
         options.headers = options.headers || new Headers();
         if (this.authStorageService.isAuthenticated()) {
             options.headers.set(
