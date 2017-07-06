@@ -3,7 +3,7 @@ import {
     ResponseContentType
 } from "@angular/http";
 import {HttpError} from "../error/http-error";
-import {Subject} from "rxjs/Subject";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 export class HttpService {
     protected get currentRequestCount(): number {
@@ -16,7 +16,10 @@ export class HttpService {
     }
     protected _currentRequestCount: number = 0;
 
-    public requestCount: Subject<number> = new Subject();
+    protected _requestCount: BehaviorSubject<number> = new BehaviorSubject(this.currentRequestCount);
+    get requestCount():BehaviorSubject<number> {
+        return this._requestCount;
+    }
 
     constructor(public baseUrl: string, protected http: Http) {
     }
