@@ -47,32 +47,32 @@ export class HttpService {
             });
         }
 
-        this._currentRequestCount++;
+        this.currentRequestCount++;
         try {
             const res: Response = await this.http.request(this.baseUrl + url, options).toPromise();
             return this.extractData(res);
         } catch (err) {
             this.handleError(err);
         } finally {
-            this._currentRequestCount--;
+            this.currentRequestCount--;
         }
     }
 
     async requestRaw<T>(url: string, options: RequestOptionsArgs): Promise<any> {
         options.responseType = ResponseContentType.Blob;
-        this._currentRequestCount++;
+        this.currentRequestCount++;
         try {
             const res: Response = await this.http.request(this.baseUrl + url, options).toPromise();
             return res.blob();
         } catch (err) {
             this.handleError(err);
         } finally {
-            this._currentRequestCount--;
+            this.currentRequestCount--;
         }
     }
 
     getRequestCount(): number {
-        return this._currentRequestCount;
+        return this.currentRequestCount;
     }
 
     protected convertToSearchParams(object: any): URLSearchParams {

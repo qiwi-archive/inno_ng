@@ -3,7 +3,6 @@ import {AuthStorageService} from "../auth-storage.service";
 import {HttpService} from "./http.service";
 
 export class JwtHttpService extends HttpService {
-    protected currentRequestCount: number = 0;
 
     constructor(public baseUrl: string, protected http: Http, protected authStorageService: AuthStorageService) {
         super(baseUrl, http);
