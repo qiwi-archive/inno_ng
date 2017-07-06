@@ -3,9 +3,20 @@ import {
     ResponseContentType
 } from "@angular/http";
 import {HttpError} from "../error/http-error";
+import {Subject} from "rxjs/Subject";
 
 export class HttpService {
-    protected currentRequestCount: number = 0;
+    protected get currentRequestCount(): number {
+        return this._currentRequestCount;
+    }
+
+    protected set currentRequestCount(value: number) {
+        this._currentRequestCount = value;
+        this.requestCount.next(this._currentRequestCount);
+    }
+    protected _currentRequestCount: number = 0;
+
+    public requestCount: Subject<number> = new Subject();
 
     constructor(public baseUrl: string, protected http: Http) {
     }
@@ -33,32 +44,32 @@ export class HttpService {
             });
         }
 
-        this.currentRequestCount++;
+        this._currentRequestCount++;
         try {
             const res: Response = await this.http.request(this.baseUrl + url, options).toPromise();
             return this.extractData(res);
         } catch (err) {
             this.handleError(err);
         } finally {
-            this.currentRequestCount--;
+            this._currentRequestCount--;
         }
     }
 
     async requestRaw<T>(url: string, options: RequestOptionsArgs): Promise<any> {
         options.responseType = ResponseContentType.Blob;
-        this.currentRequestCount++;
+        this._currentRequestCount++;
         try {
             const res: Response = await this.http.request(this.baseUrl + url, options).toPromise();
             return res.blob();
         } catch (err) {
             this.handleError(err);
         } finally {
-            this.currentRequestCount--;
+            this._currentRequestCount--;
         }
     }
 
     getRequestCount(): number {
-        return this.currentRequestCount;
+        return this._currentRequestCount;
     }
 
     protected convertToSearchParams(object: any): URLSearchParams {
