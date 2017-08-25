@@ -7,10 +7,14 @@ export class ErrorMessageService {
         ERROR_CONNECT: 'Ошибка при попытке соединения с сервером.',
         ERROR_UNKNOWN: 'Неизвестная ошибка',
         ERROR_NOT_FOUND: 'Не найдено',
-        ERROR_REQUEST_NOT_FOUND: 'Заявка не найдена',
-        ERROR_REQUEST_INVALID_STATUS: 'Статус текущей заявки не позволяет осуществить операцию',
-        ERROR_INVALID_REQUEST_FLOW: 'Текущее состояние заявки не позволяет совершить данное действие',
-        ERROR_INVALID_RESOLUTION_TYPE: 'При отправке запроса на изменение статуса заявки произошла ошибка'
+        ERROR_VALIDATION_VALIDATION: 'Ошибка валидации',
+        ERROR_VALIDATION_NO_STRING: 'Введите строку',
+        ERROR_VALIDATION_NO_INT: 'Введите число',
+        ERROR_VALIDATION_NO_EMAIL: 'Введите e-mail',
+        ERROR_VALIDATION_NO_ARRAY: 'Выберете элементы',
+        ERROR_VALIDATION_INT_OUT_OF_BOUNDS: 'Недопустимый размер числа',
+        ERROR_VALIDATION_STRING_OUT_OF_BOUNDS: 'Недопустимая длина строки'
+
     };
 
     getMessage(code: string): string {
