@@ -1,5 +1,6 @@
-import {MdDialog, MdSnackBar, MdSnackBarConfig, ComponentType, MdDialogRef} from "@angular/material";
-import {Component} from "@angular/core";
+import { ComponentType } from "@angular/cdk/portal";
+import { Component } from "@angular/core";
+import { MatDialog, MatDialogRef, MatSnackBar, MatSnackBarConfig } from "@angular/material";
 
 // TODO move to separate common lib?
 @Component({
@@ -9,11 +10,11 @@ import {Component} from "@angular/core";
 export class DialogComponent {
     public static readonly DEFAULT_DURATION: number = 4000;
 
-    constructor(public dialog: MdDialog,
-                protected snackBar: MdSnackBar) {
+    constructor(public dialog: MatDialog,
+                protected snackBar: MatSnackBar) {
     }
 
-    showDialog(component: ComponentType<any>): MdDialogRef<any> {
+    showDialog(component: ComponentType<any>): MatDialogRef<any> {
         return this.dialog.open(component);
     }
 
@@ -33,7 +34,7 @@ export class DialogComponent {
     }
 
     protected showSnackBar(message: string, duration: number = DialogComponent.DEFAULT_DURATION): void {
-        const snackBarConfig: MdSnackBarConfig = new MdSnackBarConfig();
+        const snackBarConfig: MatSnackBarConfig = new MatSnackBarConfig();
         snackBarConfig.duration = duration;
         this.snackBar.open(message, '', snackBarConfig);
     }
