@@ -18,12 +18,7 @@ export class ErrorMessageService {
     };
 
     getMessage(code: string): string {
-        const message = this.messageMap[code];
-
-        if (!message) {
-            return this.messageMap.ERROR_UNKNOWN;
-        }
-
+        const message = this.messageMap[code] || code || this.messageMap.ERROR_UNKNOWN;
         return message;
     }
 }
