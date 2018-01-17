@@ -5,7 +5,7 @@ import {Response} from "@angular/http";
 @Injectable()
 export class ErrorServiceHandler extends ErrorHandler {
     constructor(public informer: ErrorInformer) {
-        super(true);
+        super();
     }
 
     handleError(error: any): void {
