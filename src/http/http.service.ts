@@ -1,7 +1,7 @@
-import { HttpError } from "../error/http-error";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from "@angular/common/http";
-import 'rxjs/add/operator/toPromise';
+import "rxjs/add/operator/toPromise";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { HttpError } from "../error/http-error";
 
 export interface IRequestOptions {
     body?: any;
@@ -44,13 +44,7 @@ export class HttpService {
     }
 
     async get<T>(url: string, params?: any): Promise<T> {
-        const httpParams: HttpParams = new HttpParams();
-        if (params) {
-            Object.keys(params).forEach(key => {
-                httpParams.set(key, params[key]);
-            });
-        }
-        return await this.request<T>('GET', url, {params: httpParams});
+        return await this.request<T>('GET', url, {params});
     }
 
     async post<T>(url: string, body?: any): Promise<T> {
