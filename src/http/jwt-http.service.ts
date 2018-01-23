@@ -9,12 +9,12 @@ export class JwtHttpService extends HttpService {
     }
 
     async request<T>(method: string, url: string, options: IRequestOptions): Promise<T> {
-        this.processOptions(options);
+        options = this.processOptions(options);
         return super.request<T>(method, url, options);
     }
 
     async requestRaw<T>(method: string, url: string, options: IRequestOptions): Promise<Blob> {
-        this.processOptions(options);
+        options = this.processOptions(options);
         return super.requestRaw<T>(method, url, options);
     }
 
