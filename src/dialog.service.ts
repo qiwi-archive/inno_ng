@@ -1,13 +1,9 @@
 import { ComponentType } from "@angular/cdk/portal";
-import { Component } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { MatDialog, MatDialogRef, MatSnackBar, MatSnackBarConfig } from "@angular/material";
 
-// TODO move to separate common lib?
-@Component({
-    selector: 'default-component',
-    template: ``
-})
-export class DialogComponent {
+@Injectable()
+export class DialogService {
     public static readonly DEFAULT_DURATION: number = 4000;
 
     constructor(public dialog: MatDialog,
@@ -33,7 +29,7 @@ export class DialogComponent {
         this.showSnackBar(snackBarMesssage);
     }
 
-    protected showSnackBar(message: string, duration: number = DialogComponent.DEFAULT_DURATION): void {
+    protected showSnackBar(message: string, duration: number = DialogService.DEFAULT_DURATION): void {
         const snackBarConfig: MatSnackBarConfig = new MatSnackBarConfig();
         snackBarConfig.duration = duration;
         this.snackBar.open(message, '', snackBarConfig);

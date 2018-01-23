@@ -1,7 +1,6 @@
 export class HttpError extends Error {
-    public static readonly type = 'HttpError';
-
-    constructor(public code: string, public status: number, public type: string = HttpError.type) {
+    public static CODE_ERROR_CONNECT = 'ERROR_CONNECT';
+    constructor(public code: string = HttpError.CODE_ERROR_CONNECT) {
         super(code);
     }
 }

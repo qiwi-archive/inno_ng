@@ -1,23 +1,28 @@
-import {ErrorHandler, Injectable} from "@angular/core";
-import {ErrorInformer} from "./error-informer.service";
-import {HttpError} from "./http-error";
-import {Response} from "@angular/http";
+import { ErrorHandler, Injectable, Injector } from "@angular/core";
+import { DialogService } from "../dialog.service";
+import { ErrorMessageService } from "./error-message/error-message.service";
 @Injectable()
 export class ErrorServiceHandler extends ErrorHandler {
-    constructor(public informer: ErrorInformer) {
+    constructor(protected injector: Injector) {
         super();
     }
 
+    protected get _dialogService(): DialogService {
+        return this.injector.get(DialogService);
+    }
+
+    protected get _errorMessageService(): ErrorMessageService {
+        return this.injector.get(ErrorMessageService);
+    }
+
     handleError(error: any): void {
-        if (error.rejection) {
-            if (error.rejection.type === HttpError.type) {
-                this.informer.httpErrors.next(error.rejection);
-                return;
-            } else if (error.rejection instanceof Response) {
-                this.informer.httpErrors.next(new HttpError('ERROR_CONNECT', 500));
-                return;
-            }
+        let code: string;
+        if (error.hasOwnProperty('rejection')) {
+            code = error.rejection.code;
+        } else {
+            code = error.message;
         }
+        this._dialogService.showError(this._errorMessageService.getMessage(code));
         super.handleError(error);
     }
 }

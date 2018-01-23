@@ -1,9 +1,27 @@
-import {
-    Http, Headers, RequestMethod, RequestOptionsArgs, Response, URLSearchParams,
-    ResponseContentType
-} from "@angular/http";
-import {HttpError} from "../error/http-error";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import { HttpError } from "../error/http-error";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from "@angular/common/http";
+import 'rxjs/add/operator/toPromise';
+
+export interface IRequestOptions {
+    body?: any;
+    headers?: HttpHeaders | {
+        [header: string]: string | string[];
+    };
+    observe?: 'body';
+    params?: HttpParams | {
+        [param: string]: string | string[];
+    };
+    reportProgress?: boolean;
+    responseType?: any;
+    withCredentials?: boolean;
+}
+
+export interface IInnotsResponse {
+    result?: any;
+    error?: string;
+    details?: any;
+}
 
 export class HttpService {
     protected get currentRequestCount(): number {
@@ -14,42 +32,35 @@ export class HttpService {
         this._currentRequestCount = value;
         this.requestCount.next(this._currentRequestCount);
     }
+
     protected _currentRequestCount: number = 0;
 
     protected _requestCount: BehaviorSubject<number> = new BehaviorSubject(this.currentRequestCount);
-    get requestCount():BehaviorSubject<number> {
+    get requestCount(): BehaviorSubject<number> {
         return this._requestCount;
     }
 
-    constructor(public baseUrl: string, protected http: Http) {
+    constructor(public baseUrl: string, protected http: HttpClient) {
     }
 
-    async get<T>(url: string, query?: any): Promise<T> {
-        let options: RequestOptionsArgs = {method: RequestMethod.Get};
-        if (query) {
-            options.search = this.convertToSearchParams(query);
+    async get<T>(url: string, params?: any): Promise<T> {
+        const httpParams: HttpParams = new HttpParams();
+        if (params) {
+            Object.keys(params).forEach(key => {
+                httpParams.set(key, params[key]);
+            });
         }
-        return await this.request<T>(url, options);
+        return await this.request<T>('GET', url, {params: httpParams});
     }
 
     async post<T>(url: string, body?: any): Promise<T> {
-        let options: RequestOptionsArgs = {method: RequestMethod.Post};
-        if (body) {
-            options.body = body;
-        }
-        return await this.request<T>(url, options);
+        return await this.request<T>('POST', url, {body});
     }
 
-    async request<T>(url: string, options: RequestOptionsArgs): Promise<T> {
-        if (!options.headers) {
-            options.headers = new Headers({
-                'Content-Type': 'application/json'
-            });
-        }
-
+    async request<T>(method: string, url: string, options: IRequestOptions): Promise<T> {
         this.currentRequestCount++;
         try {
-            const res: Response = await this.http.request(this.baseUrl + url, options).toPromise();
+            const res: IInnotsResponse = await this.http.request<T>(method, this.baseUrl + url, options).toPromise();
             return this.extractData(res);
         } catch (err) {
             this.handleError(err);
@@ -58,12 +69,12 @@ export class HttpService {
         }
     }
 
-    async requestRaw<T>(url: string, options: RequestOptionsArgs): Promise<any> {
-        options.responseType = ResponseContentType.Blob;
+    async requestRaw<T>(method: string, url: string, options: IRequestOptions): Promise<Blob> {
+        options = Object.assign({}, options, {responseType: 'blob'});
+        options.responseType = 'blob';
         this.currentRequestCount++;
         try {
-            const res: Response = await this.http.request(this.baseUrl + url, options).toPromise();
-            return res.blob();
+            return await this.http.request<Blob>(method, this.baseUrl + url, options).toPromise();
         } catch (err) {
             this.handleError(err);
         } finally {
@@ -75,30 +86,23 @@ export class HttpService {
         return this.currentRequestCount;
     }
 
-    protected convertToSearchParams(object: any): URLSearchParams {
-        const params: URLSearchParams = new URLSearchParams();
-        Object.keys(object).forEach((key) => {
-            params.set(key, object[key]);
-        });
-        return params;
+    protected extractData(response: IInnotsResponse): any {
+        return response.result || null;
     }
 
-    protected extractData(res: Response): any {
-        let body = res.json();
-        return body.result || null;
-    }
-
-    protected handleError(error: Error | any): void {
-        if (error instanceof Response) {
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            if (err.startsWith('ERROR_')) {
-                throw new HttpError(err, error.status);
-            } else {
-                throw error;
+    protected handleError(response: HttpErrorResponse | Error | any): void {
+        if (response.hasOwnProperty('error')) {
+            const err = response.error;
+            if (err instanceof Error) {
+                // A client-side or network error occurred. HttpError will be thrown with default code.
+                throw new HttpError();
             }
+            if (err.hasOwnProperty('error') && err.error.startsWith('ERROR_')) {
+                throw new HttpError(err.error);
+            }
+            throw new Error(err);
         }
 
-        throw error;
+        throw new Error(response);
     }
 }

@@ -1,29 +1,27 @@
-import {Http, Headers, RequestOptionsArgs} from "@angular/http";
-import {AuthStorageService} from "../auth-storage.service";
-import {HttpService} from "./http.service";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { AuthStorageService } from "../auth-storage.service";
+import { HttpService, IRequestOptions } from "./http.service";
 
 export class JwtHttpService extends HttpService {
 
-    constructor(public baseUrl: string, protected http: Http, protected authStorageService: AuthStorageService) {
+    constructor(public baseUrl: string, protected http: HttpClient, protected authStorageService: AuthStorageService) {
         super(baseUrl, http);
     }
 
-    async request<T>(url: string, options: RequestOptionsArgs): Promise<T> {
+    async request<T>(method: string, url: string, options: IRequestOptions): Promise<T> {
         this.processOptions(options);
-        return super.request<T>(url, options);
+        return super.request<T>(method, url, options);
     }
 
-    async requestRaw(url: string, options: RequestOptionsArgs): Promise<Blob> {
+    async requestRaw<T>(method: string, url: string, options: IRequestOptions): Promise<Blob> {
         this.processOptions(options);
-        return super.requestRaw(url, options);
+        return super.requestRaw<T>(method, url, options);
     }
 
-    processOptions(options: RequestOptionsArgs): void {
-        options.headers = options.headers || new Headers();
+    processOptions(options: IRequestOptions): void {
+        options.headers = options.headers || new HttpHeaders();
         if (this.authStorageService.isAuthenticated()) {
-            options.headers.set(
-                'Authorization', 'Bearer ' + this.authStorageService.getCurrentJwtToken()
-            );
+            options.headers['Authorization'] = 'Bearer ' + this.authStorageService.getCurrentJwtToken();
         }
     }
 }
