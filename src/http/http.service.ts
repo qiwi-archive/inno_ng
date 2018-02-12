@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from "@angular
 import "rxjs/add/operator/toPromise";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { HttpError } from "../error/http-error";
+import * as _ from "lodash";
 
 export interface IRequestOptions {
     body?: any;
@@ -53,6 +54,12 @@ export class HttpService {
 
     async request<T>(method: string, url: string, options: IRequestOptions): Promise<T> {
         this.currentRequestCount++;
+        if (options.params) {
+            options.params = _.pickBy(params, (value) => typeof value !== 'undefined' );
+        }
+        if (options.body && typeof options.body === 'object') {
+            options.body = _.pickBy(body, (value) => typeof value !== 'undefined' );
+        }
         try {
             const res: IInnotsResponse = await this.http.request<T>(method, this.baseUrl + url, options).toPromise();
             return this.extractData(res);
