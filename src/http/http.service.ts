@@ -55,10 +55,10 @@ export class HttpService {
     async request<T>(method: string, url: string, options: IRequestOptions): Promise<T> {
         this.currentRequestCount++;
         if (options.params) {
-            options.params = _.pickBy(params, (value) => typeof value !== 'undefined' );
+            options.params = _.pickBy(options.params, (value) => typeof value !== 'undefined' );
         }
         if (options.body && typeof options.body === 'object') {
-            options.body = _.pickBy(body, (value) => typeof value !== 'undefined' );
+            options.body = _.pickBy(options.body, (value) => typeof value !== 'undefined' );
         }
         try {
             const res: IInnotsResponse = await this.http.request<T>(method, this.baseUrl + url, options).toPromise();
