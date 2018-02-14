@@ -1,3 +1,4 @@
+export * from './forms/default-control-value-accessor.component';
 export * from './error/http-error';
 export * from './error/error.service';
 export * from './error/error-message/error-message.service';
