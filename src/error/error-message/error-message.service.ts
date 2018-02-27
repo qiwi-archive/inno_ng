@@ -13,8 +13,8 @@ export class ErrorMessageService {
         ERROR_VALIDATION_NO_EMAIL: 'Введите e-mail',
         ERROR_VALIDATION_NO_ARRAY: 'Выберите элементы',
         ERROR_VALIDATION_INT_OUT_OF_BOUNDS: 'Недопустимый размер числа',
+        ERROR_VALIDATION_NUMBER_OUT_OF_BOUNDS: 'Недопустимый размер числа',
         ERROR_VALIDATION_STRING_OUT_OF_BOUNDS: 'Недопустимая длина строки'
-
     };
 
     getMessage(code: string): string {
