@@ -20,7 +20,7 @@
   "license": "MIT",
   "homepage": "https://github.com/qiwi/inno_ng#readme",
   "devDependencies": {
-    "@angular/cli": "1.6.4",
+    "@angular/cli": "14.2.8",
     "@angular/compiler-cli": "^5.2.10",
     "@types/node": "^6.0.106",
     "codelyzer": "^4.3.0",
