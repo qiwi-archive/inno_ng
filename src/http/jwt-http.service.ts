@@ -21,7 +21,13 @@ export class JwtHttpService extends HttpService {
     processOptions(options: IRequestOptions): void {
         options.headers = options.headers || {};
         if (this.authStorageService.isAuthenticated()) {
-            options.headers['Authorization'] = 'Bearer ' + this.authStorageService.getCurrentJwtToken();
+            const bearer = 'Bearer ' + this.authStorageService.getCurrentJwtToken();
+
+            if (options.headers instanceof HttpHeaders) {
+                options.headers.set('Authorization', bearer);
+            } else {
+                options.headers.Authorization = bearer;
+            }
         }
     }
 }
